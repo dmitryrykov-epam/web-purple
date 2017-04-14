@@ -6,9 +6,6 @@ const sinusAngle = Math.sin(((90 - defaultAngle) / 180) * Math.PI);
 const width = 32;
 const height = width / sinusAngle;
 
-/* descriptionTop for the defaultAngle 30 */
-const descriptionTop = height / 4;
-
 const shiftPhoto = height / 2;
 
 const EmptyDiamond = styled.div`
@@ -17,7 +14,7 @@ const EmptyDiamond = styled.div`
 `;
 
 const DiamondLeft = styled.div`
-    transform: skewY(-${defaultAngle + 'deg'});
+    transform: skewY(-${(props) => props.angle || defaultAngle + 'deg'});
 
     width: ${(props) => props.size || width}rem;
     height: ${(props) => props.size / sinusAngle || height}rem;
@@ -25,13 +22,22 @@ const DiamondLeft = styled.div`
     color: white;
 `;
 
+const DiamondLeftDescription = styled.div`
+    transform: skewY(${(props) => props.angle || defaultAngle + 'deg'});
+    
+    display:inline-block;
+    color: white;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+`;
+
 const DiamondLeftWithPhoto = styled.div`
-    transform: skewY(-${defaultAngle + 'deg'});
+    transform: skewY(-${(props) => props.angle || defaultAngle + 'deg'});
     width: ${(props) => props.size || width}rem;
     height: ${(props) => props.size / sinusAngle || height}rem;
     overflow: hidden;
     color: white;
-    position: relative;
     
     &:after {
         opacity: 0.7;
@@ -47,11 +53,8 @@ const DiamondLeftWithPhoto = styled.div`
 `;
 
 const DiamondLeftPhoto = styled.div`
-    transform: skewY(${defaultAngle + 'deg'});
+    transform: skewY(${(props) => props.angle || defaultAngle + 'deg'});
     
-    position: absolute;
-    top: 0;
-        
     background-size: cover;
     filter: grayscale(100%);
     width: 200%;
@@ -62,7 +65,7 @@ const DiamondLeftPhoto = styled.div`
 `;
 
 const DiamondRight = styled.div`
-    transform: skewY(${defaultAngle + 'deg'});
+    transform: skewY(${(props) => props.angle || defaultAngle + 'deg'});
     
     width: ${(props) => props.size || width}rem;
     height: ${(props) => props.size / sinusAngle || height}rem;
@@ -71,35 +74,22 @@ const DiamondRight = styled.div`
 `;
 
 const DiamondRightDescription = styled.div`
-    transform: skewY(-${defaultAngle + 'deg'});
+    transform: skewY(-${(props) => props.angle || defaultAngle + 'deg'});
     
-    font-family: 'Rubik', sans-serif;
-    padding: 0 3rem;
+    display:inline-block;
     color: white;
-    position: relative;
-    top: ${descriptionTop}rem;
-    z-index: 1;
-`;
-
-const DiamondLeftDescription = styled.div`
-    transform: skewY(${defaultAngle + 'deg'});
-    
-    font-family: 'Rubik', sans-serif;
-    padding: 0 3rem;
-    color: white;
-    position: relative;
-    top: ${descriptionTop}rem;
+    position: absolute;
+    top: 0;
     z-index: 1;
 `;
 
 const DiamondRightWithPhoto = styled.div`
-    transform: skewY(${defaultAngle + 'deg'});
+    transform: skewY(${(props) => props.angle || defaultAngle + 'deg'});
     
     width: ${(props) => props.size || width}rem;
     height: ${(props) => props.size / sinusAngle || height}rem;
     overflow: hidden;
     color: white;
-    position: relative;
 
     &:after {
         opacity: 0.7;
@@ -116,10 +106,7 @@ const DiamondRightWithPhoto = styled.div`
 `;
 
 const DiamondRightPhoto = styled.div`
-    transform: skewY(-${defaultAngle + 'deg'}) translateY(-${shiftPhoto}rem);
-    
-    position: absolute;
-    top: 0;
+    transform: skewY(-${(props) => props.angle || defaultAngle + 'deg'}) translateY(-${shiftPhoto}rem);
     
     background-size: cover;
     filter: grayscale(100%);
@@ -130,104 +117,38 @@ const DiamondRightPhoto = styled.div`
     background-position: ${(props) => props.position};
 `;
 
-const Header = styled.div`
-    font-size: 1.8rem;
-    text-transform: uppercase;
-    font-weight: bold;
-`;
-
-const Title = styled.div`
-    font-size: 2.8rem;
-    font-weight: bold;
-    margin: 1.8rem 0;
-    
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    max-height: 9.5rem;
-`;
-
-const Speaker = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
-const SpeakerPhoto = styled.div`
-   background-image: url(${(props) => props.src});
-   width: 4rem;
-   height: 4rem;
-   border-radius: 50%;
-`;
-
-const SpeakerName = styled.div`
-    padding-left: 1.8rem;
-    font-size: 1.8rem;
-    font-family: 'Oxygen', sans-serif;
-`;
-
-
-const Diamond = ({ isEmpty, size, isTurnLeft, backSrc, backPosition, color, header, text, speakerPhoto, speakerName, hasShadow }) => (
+const Diamond = ({ isEmpty, angle, size, isTurnLeft, photoSrc, photoPosition, color, text, hasShadow }) => (
     isEmpty && (
         <EmptyDiamond size={size} />
     ) ||
-    isTurnLeft && !backSrc && !hasShadow && (
-        <DiamondLeft size={size} style={{ backgroundColor: color }}>
+    isTurnLeft && !photoSrc && !hasShadow && (
+        <DiamondLeft angle={angle} size={size} style={{ backgroundColor: color }}>
             {text && (
-                <DiamondLeftDescription>
-                    <Header>{header}</Header>
-                    <Title>{text}</Title>
-                    <Speaker>
-                        <SpeakerPhoto src={speakerPhoto} />
-                        <SpeakerName>{speakerName}</SpeakerName>
-                    </Speaker>
-                </DiamondLeftDescription>
+                <DiamondLeftDescription angle={angle}>{text}</DiamondLeftDescription>
             )}
         </DiamondLeft>
     ) ||
-    isTurnLeft && backSrc && !hasShadow && (
-        <DiamondLeftWithPhoto size={size} cover={color}>
+    isTurnLeft && photoSrc && !hasShadow && (
+        <DiamondLeftWithPhoto angle={angle} size={size} cover={color}>
+            <DiamondLeftPhoto angle={angle} src={photoSrc} position={photoPosition} />
             {text && (
-                <DiamondLeftDescription>
-                    <Header>{header}</Header>
-                    <Title>{text}</Title>
-                    <Speaker>
-                        <SpeakerPhoto src={speakerPhoto} />
-                        <SpeakerName>{speakerName}</SpeakerName>
-                    </Speaker>
-                </DiamondLeftDescription>
+                <DiamondLeftDescription angle={angle}>{text}</DiamondLeftDescription>
             )}
-            <DiamondLeftPhoto src={backSrc} position={backPosition} />
         </DiamondLeftWithPhoto>
     ) ||
-    !isTurnLeft && !backSrc && !hasShadow && (
-        <DiamondRight size={size} style={{ backgroundColor: color }}>
+    !isTurnLeft && !photoSrc && !hasShadow && (
+        <DiamondRight angle={angle} size={size} style={{ backgroundColor: color }}>
             {text && (
-                <DiamondRightDescription>
-                    <Header>{header}</Header>
-                    <Title>{text}</Title>
-                    <Speaker>
-                        <SpeakerPhoto src={speakerPhoto} />
-                        <SpeakerName>{speakerName}</SpeakerName>
-                    </Speaker>
-                </DiamondRightDescription>
+                <DiamondRightDescription angle={angle}>{text}</DiamondRightDescription>
             )}
         </DiamondRight>
     ) ||
-    !isTurnLeft && backSrc && !hasShadow && (
-        <DiamondRightWithPhoto size={size} cover={color}>
+    !isTurnLeft && photoSrc && !hasShadow && (
+        <DiamondRightWithPhoto angle={angle} size={size} cover={color}>
+            <DiamondRightPhoto angle={angle} src={photoSrc} position={photoPosition} />
             {text && (
-                <DiamondRightDescription>
-                    <Header>{header}</Header>
-                    <Title>{text}</Title>
-                    <Speaker>
-                        <SpeakerPhoto src={speakerPhoto} />
-                        <SpeakerName>{speakerName}</SpeakerName>
-                    </Speaker>
-                </DiamondRightDescription>
+                <DiamondRightDescription angle={angle}>{text}</DiamondRightDescription>
             )}
-            <DiamondRightPhoto src={backSrc} position={backPosition} />
         </DiamondRightWithPhoto>
     )
 );

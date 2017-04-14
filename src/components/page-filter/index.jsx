@@ -18,8 +18,7 @@ export const FilterTab = styled(NavLink)`
     box-sizing: border-box;
     padding: 1.6rem 0;
     ${media.desktop`padding: 2.4rem 0;`}
-    margin: 0 2.5rem 0 0;
-    ${media.desktop`margin: 0 4.8rem 0 0;`}
+    margin: 0 4.8rem 0 0;
     text-decoration: none;
     color: ${props => props.theme.greyishBrown}
     font-size: 1.8rem;
@@ -48,8 +47,7 @@ export const FilterTab = styled(NavLink)`
 const SearchWrapper = styled.label`
     position: relative;
     padding-right: 4rem;
-    width: 100%;
-    ${media.tablet`width: initial;`} /* TODO: not sure if it is ok */
+    max-width: 27rem;
 `;
 
 const SearchInput = styled.input`
@@ -60,16 +58,8 @@ const SearchInput = styled.input`
     line-height: 2.8rem;
     font-family: 'Oxygen', sans-serif;
     outline: none;
-    
-    width: 0;
-    &:focus {
-        width: 100%; /* TODO: animate */
-        ${media.tablet`width: 25rem;`}
-    }
-    ${media.tablet`width: 25rem;`}
 `;
 
-// TODO: change color of icon if input is not empty
 const StyledSearchIcon = styled(SearchIcon)`
     position: absolute;
     right: 0;
@@ -80,16 +70,9 @@ const StyledSearchIcon = styled(SearchIcon)`
     fill: #ccc;
 `;
 
-export const Search = (props) => (
+export const Search = ({ placeholder }) => (
     <SearchWrapper>
-        <SearchInput type="text" {...props} />
+        <SearchInput type="text" placeholder={placeholder} />
         <StyledSearchIcon />
     </SearchWrapper>
 );
-
-Search.propTypes = {
-    placeholder: React.PropTypes.string,
-    onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    onChange: React.PropTypes.func,
-};
